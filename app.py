@@ -1,5 +1,5 @@
 # from playwright.sync_api import sync_playwright
-from flask import Flask, render_template
+from flask import Flask
 import json
 import time
 
