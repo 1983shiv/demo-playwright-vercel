@@ -49,10 +49,10 @@ app = FastAPI()
 @app.get('/')
 async def root():
     data = {"data": scrap(), "Timestamp": time.time()}
-    # json_dump = json.dumps(data)
-    # return json_dump
+    json_dump = json.dumps(data)
+    return json_dump
     # return render_template("index.html")
-    return data
+    # return data
 
 
 # app.run()
