@@ -1,7 +1,7 @@
 # from playwright.sync_api import sync_playwright
 from flask import Flask, render_template
-# import json
-# import time
+import json
+import time
 
 
 # def scrap():
@@ -45,11 +45,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    # data = {"data": scrap(), "Timestamp": time.time()}
-    # json_dump = json.dumps(data)
+    data = {"data": "hello Shiv", "Timestamp": time.time()}
+    json_dump = json.dumps(data)
     # return json_dump
     # return render_template("index.html")
-    return "hello Shiv"
+    return json_dump
 
 
 app.run(debug=True)
