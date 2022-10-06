@@ -43,12 +43,13 @@ def scrap():
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/home')
 def home():
-    data = {"data": scrap(), "Timestamp": time.time()}
-    json_dump = json.dumps(data)
-    return json_dump
+    # data = {"data": scrap(), "Timestamp": time.time()}
+    # json_dump = json.dumps(data)
+    # return json_dump
     # return render_template("index.html")
+    return "hello Shiv"
 
 
 app.run(debug=True)
