@@ -52,4 +52,4 @@ def home():
     return json_dump
 
 
-app.run(debug=True)
+app.run()
