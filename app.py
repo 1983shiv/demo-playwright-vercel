@@ -1,5 +1,6 @@
 # from playwright.sync_api import sync_playwright
-from flask import Flask
+# from flask import Flask
+from fastapi import FastAPI
 import json
 import time
 
@@ -40,16 +41,18 @@ import time
 #     return items
 
 
-app = Flask(__name__)
+# app = Flask(__name__)
+
+app = FastAPI()
 
 
-@app.route('/')
-def home():
+@app.get('/')
+async def root():
     data = {"data": "hello Shiv", "Timestamp": time.time()}
-    json_dump = json.dumps(data)
+    # json_dump = json.dumps(data)
     # return json_dump
     # return render_template("index.html")
-    return json_dump
+    return data
 
 
-app.run()
+# app.run()
