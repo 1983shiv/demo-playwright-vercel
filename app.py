@@ -6,10 +6,10 @@ import time
 from bs4 import BeautifulSoup as bs
 from fastapi import FastAPI
 import uvicorn
-import subprocess
+# import subprocess
 
 
-subprocess.run(["playwright", "install"])
+# subprocess.run(["playwright", "install"])
 
 
 async def scrap():
