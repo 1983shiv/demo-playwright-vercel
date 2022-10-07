@@ -6,10 +6,10 @@ import time
 from bs4 import BeautifulSoup as bs
 from fastapi import FastAPI
 import uvicorn
-# import subprocess
+import subprocess
 
 
-# subprocess.run(["playwright", "install"])
+subprocess.run(["playwright", "install"])
 
 
 async def scrap():
@@ -81,5 +81,5 @@ async def root():
 # app.run(app())
 
 
-if __name__ == '__main__':
-    uvicorn.run("app:app", port=8000, host='127.0.0.1')
+# if __name__ == '__main__':
+#     uvicorn.run("app:app", port=8000, host='127.0.0.1')
