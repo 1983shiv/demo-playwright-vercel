@@ -1,16 +1,19 @@
-from playwright.sync_api import sync_playwright
+# import asyncio
+from playwright.async_api import async_playwright
 # from flask import Flask
-from fastapi import FastAPI
 import json
 import time
+from bs4 import BeautifulSoup as bs
+from fastapi import FastAPI
+import uvicorn
 
 
-def scrap():
+async def scrap():
     items = []
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto("https://www.ergodotisi.com/en/SearchResults.aspx")
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        await page.goto("https://www.ergodotisi.com/en/SearchResults.aspx")
 
         i = 0
         # while i < 15:
@@ -18,41 +21,62 @@ def scrap():
         #     page.locator("text=More Job Posts...").click()
         #     i = i + 1
 
-        tr = page.query_selector_all(".dxdvItem")
-        # print(len(tr))
-        for dt in tr:
-            if ("today" in dt.query_selector_all("p")[3].inner_text()):
+        time.sleep(3)
+        html = await page.content()
+
+        soup = bs(html, 'html.parser')
+        # print(soup.prettify())
+        allListing = soup.find_all(
+            'article', attrs={'class': 'search-result-card'})
+        # print(len(allListing))
+        for listing in allListing:
+            if ("yesterday" in listing.find_all("p")[3].text):
+                # print(listing.find_all("p")[3].text)
                 item = {
-                    "title": dt.query_selector_all("a")[0].inner_text(),
-                    "url": dt.query_selector_all("a")[1].inner_text(),
-                    "city": dt.query_selector_all("p")[0].inner_text(),
-                    "cmpy": dt.query_selector_all("p")[1].inner_text(),
-                    "view": dt.query_selector_all("p")[2].inner_text(),
-                    "date": dt.query_selector_all("p")[3].inner_text(),
-                    "expire": dt.query_selector_all("p")[4].inner_text(),
-                    "typeofjob": dt.query_selector_all("p")[5].inner_text()
+                    "title": listing.find_all("a")[0].text,
+                    "url": listing.find_all("a")[1].text,
+                    "city": listing.find_all("p")[0].text,
+                    "cmpy": listing.find_all("p")[1].text,
+                    "view": listing.find_all("p")[2].text,
+                    "date": listing.find_all("p")[3].text,
+                    "expire": listing.find_all("p")[4].text,
+                    "typeofjob": listing.find_all("p")[5].text
                 }
                 items.append(item)
         # print(len(items))
-        # for item in items:
-        #     print(item['title'] + "-" + item['url'])
+        await browser.close()
+    return items
 
-        browser.close()
+app = FastAPI()
+
+# asyncio.run(scrap())
+
+
+@app.get('/')
+async def root():
+
+    items = await scrap()
+    # data = {"data": items, "Timestamp": time.time()}
+    # json_dump = await json.dumps(data)
+    # print("running server...")
     return items
 
 
 # app = Flask(__name__)
 
-app = FastAPI()
+# @app.route('/')
+# async def home():
+#     # data = {"data": await scrap(), "Timestamp": time.time()}
+#     # json_dump = await json.dumps(data)
+#     # print("running server...")
+#     return scrap()
+
+# async def main():
+#     await scrap()
 
 
-@app.get('/')
-async def root():
-    data = {"data": scrap(), "Timestamp": time.time()}
-    json_dump = json.dumps(data)
-    return json_dump
-    # return render_template("index.html")
-    # return data
+# app.run(app())
 
 
-# app.run()
+if __name__ == '__main__':
+    uvicorn.run("app:app", port=8000, host='127.0.0.1')
