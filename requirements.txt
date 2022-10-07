@@ -1,6 +1,5 @@
 fastapi==0.85.0
 asyncio==3.4.3
 beautifulsoup4==4.11.1
-playwright==1.26.1
 uvicorn==0.18.3
 flask==2.2.2
